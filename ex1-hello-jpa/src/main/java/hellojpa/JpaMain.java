@@ -2,8 +2,6 @@ package hellojpa;
 
 import jakarta.persistence.*;
 
-import java.util.List;
-
 public class JpaMain {
 
     public static void main(String[] args) {
@@ -49,15 +47,15 @@ public class JpaMain {
             //System.out.println(findMember2 == findMember3);
 
             //영속
-            Member member1 = new Member(150L, "A");
-            Member member2 = new Member(160L, "B");
+            /*MemberV1 memberV11 = new MemberV1(150L, "A");
+            MemberV1 memberV12 = new MemberV1(160L, "B");
 
-            em.persist(member1);
-            em.persist(member2);
+            em.persist(memberV11);
+            em.persist(memberV12);*/
 
-            em.flush(); // 트랜잭션 커밋전에 강제반영
+            //em.flush(); // 트랜잭션 커밋전에 강제반영
 
-            System.out.println("=======실행확인선============");
+            //System.out.println("=======실행확인선============");
 
             // 트랜잭션 커밋. 커밋하는 순간 flush()를 통해 cud를 실행함.
             // r은 트랜잭션이 아니어도 되지만 동일성 보장을 위해 트랜색션 안에서 하는게 좋음
