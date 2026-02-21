@@ -39,7 +39,7 @@ public class JpaMain {
             // 이런식으로 그냥 team을 가져올수있음.
             //위에서 setName을 했고, id의 경우 시퀀스 전략으로 가져왔기 때문에
             // team객체에는 id, name이 존재
-            member.setTeam(team);
+            member.setTeam(team); // 양방향시 연관관계의 주인 - 실제 crud가 되는
 
             //member를 1차캐시에 저장 및 쓰기 지연 저장소에 쿼리생성
             em.persist(member);
@@ -62,7 +62,13 @@ public class JpaMain {
             flush() 후 clear()하면 위에서 만든 team과 member가 저장된 후
              1차 캐시와 쓰기지연 저장소가 비기때문에
             아래의 find시 db에서 데이터를 가져오므로 연관관계가 매핑되어 size가 1
+            이런 문제도 있고, 객체지향의 원칙을 지키기위해
+            team도 team.getMembers().add(member)를 해줌.
             */
+
+            //이를 행하는 연관관계 편의 메소드를 Meber에 설정. - setter
+            //team.getMembers().add(member);
+
             /*em.flush();
             em.clear();*/
 
@@ -73,7 +79,7 @@ public class JpaMain {
             System.out.println("findTeam = " + findTeam);
             //
 
-            //양방향
+            //양방향, 지연로딩
             List<Member> members = findMember.getTeam().getMembers();
 
             System.out.println("members.size() = " + members.size());
