@@ -119,6 +119,31 @@ public class JpaMain {
             //서브쿼리는 비슷하나 from절에서 못씀. 인라인뷰 불가.
             // 조인으로 풀어서 해결 하던가 안되면 jdbc로 해결하는 수밖에 없음.
 
+            //타입 표현
+
+            Member memberTypeEx = new Member();
+            memberTypeEx.setUsername("memberTypeEx");
+            memberTypeEx.setAge(10);
+            memberTypeEx.setTeam(team);
+            memberTypeEx.setType(MemberType.ADMIN);
+
+            em.persist(memberTypeEx);
+            em.flush();
+            em.clear();
+
+            String queryTypeEx = "select m.username, 'HELLO', TRUE, m.type From Member m "
+                    +"where m.type= jpql.MemberType.ADMIN";
+            List<Object[]> resultTypeEx = em.createQuery(queryTypeEx)
+                    .getResultList();
+
+            for (Object[] objects : resultTypeEx) {
+                System.out.println("objects = " + objects[0]);
+                System.out.println("objects = " + objects[1]);
+                System.out.println("objects = " + objects[2]);
+                System.out.println("objects = " + objects[3]);
+            }
+
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
