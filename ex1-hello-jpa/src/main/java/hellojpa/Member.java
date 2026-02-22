@@ -16,13 +16,16 @@ public class Member extends BaseEntity{
     private Long teamId;*/
 
     //회원이 many 팀이 one 외래키가 있는쪽이 many임
-    @ManyToOne
-    @JoinColumn(name = "TEAM_ID")
+    /*@ManyToOne
+    @JoinColumn(name = "TEAM_ID")*/
+    //@ManyToOne(fetch = FetchType.EAGER) // 즉시로딩
+    @ManyToOne(fetch = FetchType.LAZY) // 지연로딩
+    @JoinColumn
     private Team team;
 
-    @OneToOne
+    /*@OneToOne
     @JoinColumn(name = "LOCKER_ID")
-    private Locker locker;
+    private Locker locker;*/
 
     public Long getId() {
         return id;
