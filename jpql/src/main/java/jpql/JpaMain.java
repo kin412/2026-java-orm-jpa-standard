@@ -143,6 +143,35 @@ public class JpaMain {
                 System.out.println("objects = " + objects[3]);
             }
 
+            //조건식
+
+            String queryCase = "select " +
+                    "case when m.age <= 10 then '학생요금' " +
+                    "when m.age >= 160 then '경로요금' " +
+                    "else '일반요금' " +
+                    "end " +
+                    "from Member m";
+            List<String> resultCase = em.createQuery(queryCase, String.class).getResultList();
+
+            for (String s : resultCase) {
+                System.out.println("s = " + s);
+            }
+
+            Member memberCoal = new Member();
+            memberCoal.setUsername(null);
+            memberCoal.setAge(10);
+
+            em.persist(memberCoal);
+            em.flush();
+            em.clear();
+
+            String queryCoal = "select coalesce(m.username, '이름 없는 회원') as username from Member m";
+            List<String> resultCoal = em.createQuery(queryCoal, String.class).getResultList();
+
+            for (String s : resultCoal) {
+                System.out.println("s = " + s);
+            }
+
 
             tx.commit();
         } catch (Exception e) {
