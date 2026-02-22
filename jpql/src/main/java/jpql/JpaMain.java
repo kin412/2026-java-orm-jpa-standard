@@ -60,6 +60,28 @@ public class JpaMain {
             Member findMember = result.get(1);
             findMember.setAge(90);
 
+            for (int i=0; i<100; i++){
+                Member member3 = new Member();
+                member3.setUsername("member" + i);
+                member3.setAge(i);
+                em.persist(member3);
+            }
+
+            em.flush();
+            em.clear();
+
+            List<Member> result1 = em.createQuery("select m from Member m order by m.age desc", Member.class)
+                    //setFirstResult((currentPage - 1) * pageSize)
+                    //setMaxResults(pageSize)
+                    .setFirstResult(5)
+                    .setMaxResults(10)
+                    .getResultList();
+
+            System.out.println("result1.size() = " + result1.size());
+            for (Member member1 : result1) {
+                System.out.println("member1 = " + member1);
+            }
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
