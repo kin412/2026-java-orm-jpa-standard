@@ -172,6 +172,14 @@ public class JpaMain {
                 System.out.println("s = " + s);
             }
 
+            //jpql 함수
+
+            String queryFunc = "select concat('a', 'b') from Member m";
+            List<String> resultFunc = em.createQuery(queryFunc, String.class).getResultList();
+
+            for (String s : resultFunc) {
+                System.out.println("s = " + s);
+            }
 
             tx.commit();
         } catch (Exception e) {
