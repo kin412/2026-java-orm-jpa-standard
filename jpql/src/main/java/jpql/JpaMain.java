@@ -116,6 +116,9 @@ public class JpaMain {
             System.out.println("teamName = " + resultJoin.get(0).getTeam().getName());
             System.out.println("memberUsername = " + resultJoin.get(0).getUsername());
 
+            //서브쿼리는 비슷하나 from절에서 못씀. 인라인뷰 불가.
+            // 조인으로 풀어서 해결 하던가 안되면 jdbc로 해결하는 수밖에 없음.
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
