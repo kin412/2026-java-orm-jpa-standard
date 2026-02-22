@@ -60,6 +60,8 @@ public class JpaMain {
             Member findMember = result.get(1);
             findMember.setAge(90);
 
+            /*
+            //페이징테스트를 위해
             for (int i=0; i<100; i++){
                 Member member3 = new Member();
                 member3.setUsername("member" + i);
@@ -70,6 +72,7 @@ public class JpaMain {
             em.flush();
             em.clear();
 
+            //페이징
             List<Member> result1 = em.createQuery("select m from Member m order by m.age desc", Member.class)
                     //setFirstResult((currentPage - 1) * pageSize)
                     //setMaxResults(pageSize)
@@ -81,6 +84,37 @@ public class JpaMain {
             for (Member member1 : result1) {
                 System.out.println("member1 = " + member1);
             }
+
+            */
+
+            em.flush();
+            em.clear();
+
+            //조인
+
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
+            Member member4 = new Member();
+            member4.setUsername("member4");
+            member4.setAge(10);
+            member4.setTeam(team);
+
+            em.persist(member4);
+
+            em.flush();
+            em.clear();
+
+            String teamName = "teamA";
+
+            String queryJoin = "select m from Member m inner join m.team t where t.name = :teamName";
+            List<Member> resultJoin = em.createQuery(queryJoin, Member.class)
+                    .setParameter("teamName", teamName)
+                    .getResultList();
+
+            System.out.println("teamName = " + resultJoin.get(0).getTeam().getName());
+            System.out.println("memberUsername = " + resultJoin.get(0).getUsername());
 
             tx.commit();
         } catch (Exception e) {
