@@ -6,6 +6,9 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
+import java.util.List;
+import java.util.Set;
+
 public class ValueMain {
 
     public static void main(String[] args) {
@@ -50,8 +53,61 @@ public class ValueMain {
            //그냥 이렇게 하면 다바뀜. 값타입은 이렇게 사용하면 안됨.
             member2.getHomeAddress().setCity("newCity");
 
+            em.flush();
+            em.clear();
 
-           tx.commit();
+            MemberV3 member4 = new MemberV3();
+            member4.setUsername("member4");
+            member4.setHomeAddress(new Address("homeCity", "street22", "10000"));
+
+            member4.getFavoriteFoods().add("치킨");
+            member4.getFavoriteFoods().add("족발");
+            member4.getFavoriteFoods().add("피자");
+
+            member4.getAddressesHistory().add(new Address("old1", "street22", "10000"));
+            member4.getAddressesHistory().add(new Address("old2", "street22", "10000"));
+
+            em.persist(member4);
+
+            em.flush();
+            em.clear();
+
+            System.out.println("===============START========================");
+            MemberV3 findMember = em.find(MemberV3.class, member4.getId());
+
+            List<Address> addressesHistory = findMember.getAddressesHistory();
+            for (Address address1 : addressesHistory) {
+                System.out.println("address1: " + address1.getCity() + " " + address1.getStreet() + " " + address1.getZipcode());
+            }
+
+            Set<String> favoriteFoods = findMember.getFavoriteFoods();
+            for (String favoriteFood : favoriteFoods) {
+                System.out.println("favoriteFood: " + favoriteFood);
+            }
+
+            em.flush();
+            em.clear();
+
+            //값타입 수정
+            System.out.println("===============값 타입 수정========================");
+            MemberV3 findMember1 = em.find(MemberV3.class, member4.getId());
+
+            // 이렇게 하면 사이드이펙트가 생길수 있음. 불변객체를 사용하는 방식으로 바꿔야함.
+            //findMember1.getHomeAddress().setCity("newCity");
+
+            Address a = findMember1.getHomeAddress();
+            //불변 객체 - 그냥 새로 생성해서 갈아끼워야함.
+            findMember1.setHomeAddress(new Address("newCity4", a.getStreet(), a.getZipcode()));
+
+            //치킨 -> 한식
+            findMember1.getFavoriteFoods().remove("치킨");
+            findMember1.getFavoriteFoods().add("한식");
+
+            // equals와 hashcode가 중요한 이유
+            findMember1.getAddressesHistory().remove(new Address("old1", "street22", "10000"));
+            findMember1.getAddressesHistory().add(new Address("seoulland", "go_street", "9999"));
+
+            tx.commit();
         } catch (Exception e) {
             tx.rollback();
             e.printStackTrace();
