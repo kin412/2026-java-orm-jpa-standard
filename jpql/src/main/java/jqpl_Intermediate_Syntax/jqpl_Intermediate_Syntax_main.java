@@ -8,7 +8,7 @@ import jpql.Member;
 
 import java.util.List;
 
-public class Main {
+public class jqpl_Intermediate_Syntax_main {
 
     public static void main(String[] args) {
 
